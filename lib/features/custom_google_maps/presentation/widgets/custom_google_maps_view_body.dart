@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location_tracker/core/services/location_service.dart';
 
 class CustomGoogleMapsViewBody extends StatefulWidget {
   const CustomGoogleMapsViewBody({super.key});
@@ -12,6 +13,8 @@ class CustomGoogleMapsViewBody extends StatefulWidget {
 class _CustomGoogleMapsViewBodyState extends State<CustomGoogleMapsViewBody> {
   late GoogleMapController googleMapController;
   late CameraPosition initialCameraPosition;
+  Set<Marker> markers = {};
+  LocationServices locationService = LocationServices();
 
   @override
   void initState() {
@@ -23,7 +26,18 @@ class _CustomGoogleMapsViewBodyState extends State<CustomGoogleMapsViewBody> {
   }
 
   @override
+  void dispose() {
+    googleMapController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return GoogleMap(initialCameraPosition: initialCameraPosition);
+    return GoogleMap(
+      zoomControlsEnabled: false,
+      initialCameraPosition: initialCameraPosition,
+      onMapCreated: (controller) => googleMapController = controller,
+      markers: markers,
+    );
   }
 }
