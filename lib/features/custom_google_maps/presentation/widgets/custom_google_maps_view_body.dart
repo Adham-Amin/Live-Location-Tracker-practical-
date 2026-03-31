@@ -22,7 +22,6 @@ class _CustomGoogleMapsViewBodyState extends State<CustomGoogleMapsViewBody> {
       target: LatLng(28.6483557, 30.8303655),
       zoom: 3,
     );
-    getLocationStream();
     super.initState();
   }
 
@@ -38,7 +37,7 @@ class _CustomGoogleMapsViewBodyState extends State<CustomGoogleMapsViewBody> {
       zoomControlsEnabled: false,
       onMapCreated: (controller) {
         googleMapController = controller;
-        getCurrentLocation();
+        getLocationStream();
       },
       initialCameraPosition: initialCameraPosition,
       markers: markers,
