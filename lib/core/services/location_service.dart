@@ -27,6 +27,7 @@ class LocationServices {
   }
 
   Stream<LocationData> getLocationStream() {
+    _location.changeSettings(distanceFilter: 2);
     return _location.onLocationChanged;
   }
 }

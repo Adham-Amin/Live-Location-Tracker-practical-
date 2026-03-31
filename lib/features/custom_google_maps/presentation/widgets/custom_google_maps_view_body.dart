@@ -20,8 +20,9 @@ class _CustomGoogleMapsViewBodyState extends State<CustomGoogleMapsViewBody> {
   void initState() {
     initialCameraPosition = const CameraPosition(
       target: LatLng(28.6483557, 30.8303655),
-      zoom: 14,
+      zoom: 3,
     );
+    getLocationStream();
     super.initState();
   }
 
@@ -35,9 +36,52 @@ class _CustomGoogleMapsViewBodyState extends State<CustomGoogleMapsViewBody> {
   Widget build(BuildContext context) {
     return GoogleMap(
       zoomControlsEnabled: false,
+      onMapCreated: (controller) {
+        googleMapController = controller;
+        getCurrentLocation();
+      },
       initialCameraPosition: initialCameraPosition,
-      onMapCreated: (controller) => googleMapController = controller,
       markers: markers,
     );
+  }
+
+  void getLocationStream() {
+    locationService.getLocationStream().listen((location) {
+      googleMapController.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(location.latitude!, location.longitude!),
+            zoom: 18,
+          ),
+        ),
+      );
+      markers.add(
+        Marker(
+          markerId: const MarkerId('myLocation'),
+          position: LatLng(location.latitude!, location.longitude!),
+        ),
+      );
+      setState(() {});
+    });
+  }
+
+  void getCurrentLocation() {
+    locationService.getCurrentLocation().then((location) {
+      googleMapController.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(location.latitude!, location.longitude!),
+            zoom: 18,
+          ),
+        ),
+      );
+      markers.add(
+        Marker(
+          markerId: const MarkerId('myLocation'),
+          position: LatLng(location.latitude!, location.longitude!),
+        ),
+      );
+      setState(() {});
+    });
   }
 }
